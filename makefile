@@ -1,4 +1,12 @@
+SHELL := /usr/bin/bash
 .PHONY: all server client run clean
+MAKEFLAGS += --no-print-directory
+
+# Absolute path of the workspace root
+WORKSPACE = $(CURDIR)
+BUILD_LOCATION = $(CURDIR)/build
+# # Export to ALL sub-makes
+export WORKSPACE BUILD_LOCATION
 
 all: server client
 

@@ -2,12 +2,9 @@
   "configurations": [
     {
       "name": "Linux",
-      "compilerPath": "/usr/bin/g++",
       "includePath": [
-        "/usr/include",
-        "${workspaceFolder}/**"
-      ],
-      "cppStandard": "c++17"
+        "${workspaceFolder}/libs/boost"
+      ]
     }
   ],
   "version": 4

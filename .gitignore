@@ -1,2 +1,2 @@
-client/client
-server/server
+build
+proto/message.pb*

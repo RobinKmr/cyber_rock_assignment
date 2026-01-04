@@ -1,9 +1,0 @@
-{
-  "name": "Boost Test",
-  "image": "ubuntu:22.04",
-  "workspaceFolder": "/workspace",
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind"
-  ],
-  "postCreateCommand": "apt update && apt install -y make build-essential libboost-all-dev git"
-}
