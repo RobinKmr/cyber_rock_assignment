@@ -1,0 +1,9 @@
+[submodule "libs/nanapb"]
+	path = libs/nanapb
+	url = https://github.com/nanopb/nanopb
+[submodule "libs/trezor-crypto"]
+	path = libs/trezor-crypto
+	url = https://github.com/trezor/trezor-crypto
+[submodule "libs/boost-tcp-server-client"]
+	path = libs/boost-tcp-server-client
+	url = https://github.com/alejandrofsevilla/boost-tcp-server-client
