@@ -1,14 +1,14 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -I../libs/boost
-SRC = $(CURDIR)/client.cpp
-INCLUDES = -I../libs
+CXXFLAGS = -std=c++17 -Wall -Wextra 
+INCLUDES = -I../libs/boost -I../libs/nanopb -I../generated/proto
 LIBS = -lboost_system -lpthread
 
 TARGET = $(BUILD_LOCATION)/client
+SRC = $(CURDIR)/client.cpp
 .SHELLFLAGS := -lc
 
 all:
-	@$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(INCLUDES) $(LIBS)
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) $(SRC) -o $(TARGET) $(LIBS)
 
 run: all
 	@./$(TARGET)

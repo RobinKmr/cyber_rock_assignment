@@ -4,7 +4,10 @@
       "name": "Linux",
       "includePath": [
         "${workspaceFolder}/libs/boost"
-      ]
+      ],
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "c17",
+      "cppStandard": "c++17"
     }
   ],
   "version": 4

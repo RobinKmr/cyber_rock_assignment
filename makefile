@@ -5,30 +5,30 @@ MAKEFLAGS += --no-print-directory
 # Absolute path of the workspace root
 WORKSPACE = $(CURDIR)
 BUILD_LOCATION = $(CURDIR)/build
-# # Export to ALL sub-makes
+# Export to ALL sub-makes
 export WORKSPACE BUILD_LOCATION
 
-all: server client
+all: Server Client
 
 server:
-	$(MAKE) -C server
+	$(MAKE) -C Server
 
 client:
-	$(MAKE) -C client
+	$(MAKE) -C Client
 
 run-server:
-	$(MAKE) -C server run
+	$(MAKE) -C Server run
 
 run-client:
-	$(MAKE) -C client run
+	$(MAKE) -C Client run
 
 run: all
 	@echo "Starting server..."
-	@$(MAKE) -C server run & \
+	@$(MAKE) -C Server run & \
 	sleep 1 && \
 	echo "Starting client..." && \
-	$(MAKE) -C client run
+	$(MAKE) -C Client run
 
 clean:
-	$(MAKE) -C server clean
-	$(MAKE) -C client clean
+	$(MAKE) -C Server clean
+	$(MAKE) -C Client clean

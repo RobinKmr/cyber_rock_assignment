@@ -1,14 +1,18 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -I./libs/boost
-SRC = $(CURDIR)/server.cpp
-LIBS = -lboost_system -lpthread -Llibs/boost/stage/lib -lws2_32
+CXXFLAGS = -Wall
+INCLUDES = -I../libs/boost -I../libs/nanopb -I../generated/proto
+LIBS = -lboost_system
 
-TARGET = $(BUILD_LOCATION)/server
-.SHELLFLAGS := -lc
+TARGET = server
+SRC = $(CURDIR)/server.cpp \
+	../libs/nanopb/pb_encode.h \
+	../libs/nanopb/pb_decode.h \
+	../libs/nanopb/pb.h \
+	../generated/proto/sensor.pb.h
 
 all:
-	mkdir -p $(TARGET)
-	@$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(LIBS)
+# 	@mkdir -p $(BUILD_LOCATION)/server
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) $(SRC) $(LIBS)  -fexceptions -g -std=c++17 -o $(TARGET)
 
 run: all
 	@./$(TARGET)
