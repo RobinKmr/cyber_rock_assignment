@@ -1,0 +1,16 @@
+syntax = "proto3";
+import "nanopb.proto";
+
+message ClientHello {
+  bytes serial_id = 1 [(nanopb).max_size = 32];
+  bytes signature = 2 [(nanopb).max_size = 64];
+}
+
+message ServerChallenge {
+  bytes random = 1 [(nanopb).max_size = 32];
+  bytes signature = 2 [(nanopb).max_size = 64];
+}
+
+message ClientResponse {
+  bytes signature = 1 [(nanopb).max_size = 64];
+}

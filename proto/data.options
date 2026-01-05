@@ -1,0 +1,2 @@
+SecureData.sender max_size:16
+SecureData.payload max_size:64

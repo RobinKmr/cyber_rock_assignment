@@ -1,0 +1,9 @@
+# auth.options
+
+ClientHello.serial_id max_size : 32
+ClientHello.signature max_size : 64
+
+ServerChallenge.random max_size : 32
+ServerChallenge.signature max_size : 64
+
+ClientResponse.signature max_size : 64
