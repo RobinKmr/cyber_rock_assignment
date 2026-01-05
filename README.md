@@ -51,3 +51,13 @@ For installing nanopb
 
 `mkdir generated` - create folder where the nanopb code will be generated
 `python libs/nanopb/generator/nanopb_generator.py proto/sensor.proto --output-dir=generated`
+
+For building the project using cmake
+`mkdir build`
+`cd build`
+`cmake ..`
+`cmake --build .`
+
+For running the project use seperate terminal for these commands
+`./build/server`
+`./build/client`
