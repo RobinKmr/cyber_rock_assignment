@@ -6,8 +6,10 @@
 #include "auth.pb.h"
 #include "data.pb.h"
 
-Server::Server(boost::asio::io_context& io, uint16_t port, const uint8_t privKey[32])
-    : acceptor_(io, tcp::endpoint(tcp::v4(), port)), socket_(io) {
+Server::Server(tcp::socket socket, const uint8_t privKey[32])
+        : socket_(std::move(socket)){
+// Server::Server(boost::asio::io_context& io, uint16_t port, const uint8_t privKey[32])
+//     : acceptor_(io, tcp::endpoint(tcp::v4(), port)), socket_(io) {
     memcpy(priv, privKey, 32);
 }
 
@@ -16,7 +18,7 @@ void Server::registerClient(const std::string& serial, const uint8_t pub[64]) {
 }
 
 void Server::run() {
-    acceptor_.accept(socket_);
+    // acceptor_.accept(socket_);
     authenticateClient();
 }
 
