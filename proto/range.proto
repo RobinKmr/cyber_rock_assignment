@@ -1,0 +1,19 @@
+syntax = "proto3";
+import "nanopb.proto";
+
+message RangePoint {
+  bytes x = 1 [(nanopb).max_size = 32];   // 32 bytes
+  bytes y = 2 [(nanopb).max_size = 32];   // 32 bytes
+}
+
+message RangeProofRequest {
+  uint32 n = 1;
+  uint64 a = 2;
+  uint64 b = 3;
+  RangePoint CC1 = 6;   // (b-x)G - rH
+  RangePoint CC2 = 7;   // (x-a)G + rH
+}
+
+message RangeProofResponse {
+  bool success = 1;
+}

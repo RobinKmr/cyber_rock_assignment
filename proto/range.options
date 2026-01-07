@@ -1,0 +1,4 @@
+# range.options
+
+RangePoint.x max_size:32
+RangePoint.y max_size:32

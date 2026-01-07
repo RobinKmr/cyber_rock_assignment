@@ -6,8 +6,13 @@
 #include "auth.pb.h"
 #include "data.pb.h"
 
-using ByteVec = std::vector<uint8_t>;
 using boost::asio::ip::tcp;
+
+#define HIDDEN_NO   12345678 // Hidden number
+#define NOF_ROOTS   4 // Max number of roots for value x
+#define N           32 // Max numbers of bits for X
+#define A           1 // Any number between 1 to (2^32-1)
+#define B           (1ULL << N) - 1 // Any number between 1 to (2^32-1)
 
 class Client {
     uint8_t priv[32];
@@ -24,8 +29,9 @@ public:
            uint16_t port);
 
     void authenticate();
+    void generate_proof();
     void sendSecure(const std::string& sender, const std::string& payload);
-    std::string receiveSecure();
+    SecureData receiveSecure();
 
 private:
     ClientHello createHello();

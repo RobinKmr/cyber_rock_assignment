@@ -2,6 +2,6 @@ syntax = "proto3";
 import "nanopb.proto";
 
 message SecureData {
-  string sender = 1 [(nanopb).max_size = 32];
+  string sender = 1 [(nanopb).max_size = 65];
   string payload = 2 [(nanopb).max_size = 256];
 }

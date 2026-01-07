@@ -2,9 +2,10 @@
 
 #include <boost/asio.hpp>
 #include <map>
-// #include <functional>
 #include <iostream>
 #include <auth.pb.h>
+#include <data.pb.h>
+#include "range_proof_utils.hpp"
 
 using ByteVec = std::vector<uint8_t>;
 using boost::asio::ip::tcp;
@@ -21,8 +22,9 @@ public:
 
     void registerClient(const std::string& serial, const uint8_t pub[64]);
     void run();
-    void sendSecure(const std::string& msg);
-    std::string receiveSecure();
+    void rangeProofClient();
+    void sendSecure(const std::string& sender, const std::string& payload);
+    SecureData receiveSecure();
 
 private:
     ClientHello receiveHello();

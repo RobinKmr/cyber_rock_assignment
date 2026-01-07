@@ -9,6 +9,7 @@ set(COMMON_DIR ${CMAKE_SOURCE_DIR}/Common)
 set(COMMON_SRC
     ${COMMON_DIR}/crypto_utils.hpp
     ${COMMON_DIR}/nanopb_utils.hpp
+    ${COMMON_DIR}/range_proof_utils.hpp
     ${COMMON_DIR}/transport.hpp
 )
 # ---- Boost ----
@@ -26,8 +27,9 @@ set(NANOPB_SRC
 # ---- Shared protobuf sources ----
 set(PROTO_DIR ${CMAKE_SOURCE_DIR}/generated/proto)
 set(PROTO_SRC
-    ${PROTO_DIR}/data.pb.c
     ${PROTO_DIR}/auth.pb.c
+    ${PROTO_DIR}/data.pb.c
+    ${PROTO_DIR}/range.pb.c
 )
 
 # ---- Trezor crypto paths ----
@@ -95,25 +97,23 @@ set(TREZOR_CRYPTO_SRC
     ${TREZOR_CRYPTO_DIR}/blake256.c
 )
 
-
 include_directories(
     ${Boost_INCLUDE_DIRS}
     ${NANOPB_DIR}
     ${TREZOR_CRYPTO_DIR}
     ${PROTO_DIR}
     ${COMMON_DIR}
-    )
-    
-    # file(GLOB_RECURSE all_sources "*.cpp")
-    # ---- Server ----
-    add_executable(server
+)
+
+# ---- Server ----
+add_executable(server
     Server/server.cpp
     Server/main.cpp
     ${PROTO_SRC}
     ${NANOPB_SRC}
     ${TREZOR_CRYPTO_SRC}
     ${COMMON_SRC}
-    )
+)
 
 # ---- Client ----
 add_executable(client

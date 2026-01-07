@@ -1,17 +1,12 @@
 #pragma once
 
 extern "C" {
+#include <bignum.h>
 #include <ecdsa.h>
 #include <secp256k1.h>
 #include <sha2.h>
 #include <rand.h>
 }
-// #include <cstring>
-// #include <stdexcept>
-// #include <vector>
-// #include <cstdint>
-// #include <openssl/sha.h>
-// #include <random>
 
 using ByteVec = std::vector<uint8_t>;
 
@@ -25,10 +20,6 @@ inline ByteVec sha256(const ByteVec& data) {
 
 inline ByteVec rand32() {
     ByteVec r(32);
-    // std::random_device rd;
-    // for(int i=0;i<32;i++) r[i] = rd();
-    // return r;
-    //     ByteVec r(32);
     random_buffer(r.data(), 32);
     return r;
 }
@@ -49,4 +40,4 @@ inline bool verify_digest(const uint8_t pub[64], const ByteVec& hash, const Byte
     return ecdsa_verify_digest(&secp256k1, pub, sig.data(), hash.data());
 }
 
-} // namespace crypto
+} // namespace crypto_utils

@@ -1,5 +1,6 @@
 #include "server.hpp"
 #include <crypto_utils.hpp>
+#include "range_proof_utils.hpp"
 #include <nanopb_utils.hpp>
 #include <transport.hpp>
 #include "auth.pb.h"
@@ -24,9 +25,8 @@ void Server::authenticateClient() {
     ServerChallenge challenge = sendChallenge(hello);
 
     transport::send_frame(socket_, nanopb::encode_message(ServerChallenge_fields, &challenge));
-    auto buf = transport::recv_frame(socket_);
     ClientResponse resp = ClientResponse_init_zero;
-    nanopb::decode_message(ClientResponse_fields, &resp, buf);
+    nanopb::decode_message(ClientResponse_fields, &resp, transport::recv_frame(socket_));
 
     // Verify client response
     std::string serial((char*)hello.serial_id.bytes, hello.serial_id.size);
@@ -39,11 +39,37 @@ void Server::authenticateClient() {
     std::cout << "Client verified: " << serial << "\n";
 }
 
+void Server::rangeProofClient(){
+    RangeProofRequest req = RangeProofRequest_init_default;
+    nanopb::decode_message(RangeProofRequest_fields, &req, transport::recv_frame(socket_));
+    
+    curve_point G = make_G();
+    // P1 = bG − CC1
+    curve_point bG, negCC1, P1;
+    pb_to_ecpoint(req.CC1, negCC1);
+    ec_mul(bG, ec_bn_64(req.b), G);
+    ec_neg(negCC1);
+    ec_add(P1, bG, negCC1);
+    
+    // P2 = CC2 + aG
+    curve_point aG, P2, CC2;
+    pb_to_ecpoint(req.CC1, CC2);
+    ec_mul(aG, ec_bn_64(req.a), G);
+    ec_add(P2, CC2, aG);
+
+    bool ok = ec_equal(P1, P2);
+    if(!ok){
+        std::runtime_error("[FAIL] Range verification");
+    }
+    RangeProofResponse resp = RangeProofResponse_init_default;
+    resp.success = ok;
+    transport::send_frame(socket_, nanopb::encode_message(RangeProofResponse_fields, &resp));
+}
+
 // ------------------ Helpers ------------------
 ClientHello Server::receiveHello() {
-    auto buf = transport::recv_frame(socket_);
     ClientHello hello = ClientHello_init_zero;
-    nanopb::decode_message(ClientHello_fields, &hello, buf);
+    nanopb::decode_message(ClientHello_fields, &hello, transport::recv_frame(socket_));
 
     std::string serial((char*)hello.serial_id.bytes, hello.serial_id.size);
     ByteVec sig(hello.signature.bytes, hello.signature.bytes + hello.signature.size);
@@ -71,16 +97,15 @@ ServerChallenge Server::sendChallenge(const ClientHello& hello) {
 }
 
 // ------------------ Secure Data ------------------
-void Server::sendSecure(const std::string& msg) {
+void Server::sendSecure(const std::string& sender, const std::string& payload) {
     SecureData d = SecureData_init_zero;
-    strncpy(d.payload, msg.c_str(), sizeof(d.payload) - 1);
-    auto buf = nanopb::encode_message(SecureData_fields, &d);
-    transport::send_frame(socket_, buf);
+    strncpy(d.sender, sender.c_str(), sizeof(d.sender) - 1);
+    strncpy(d.payload, payload.c_str(), sizeof(d.payload) - 1);
+    transport::send_frame(socket_, nanopb::encode_message(SecureData_fields, &d));
 }
 
-std::string Server::receiveSecure() {
-    auto buf = transport::recv_frame(socket_);
+SecureData Server::receiveSecure() {
     SecureData d = SecureData_init_zero;
-    nanopb::decode_message(SecureData_fields, &d, buf);
-    return std::string(std::string(d.sender) + std::string(",") +std::string(d.payload));
+    nanopb::decode_message(SecureData_fields, &d, transport::recv_frame(socket_));
+    return d;
 }

@@ -1,5 +1,6 @@
 #include "client.hpp"
 #include "crypto_utils.hpp"
+#include "range_proof_utils.hpp"
 #include "iostream"
 #include <string>
 #include <format>
@@ -34,6 +35,9 @@ int main() {
 
     Client client(io, "CLIENT-001", clientPriv, serverPub, "127.0.0.1", 9000);
     client.authenticate();
+    client.generate_proof();
     client.sendSecure(toHex(client_id), "Hello from client!");
-    std::cout << "Received: " << client.receiveSecure() << "\n";
+
+    SecureData data = client.receiveSecure();
+    std::cout << data.sender << ": " << data.payload << "\n";
 }

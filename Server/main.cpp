@@ -1,5 +1,6 @@
 #include "server.hpp"
 #include "crypto_utils.hpp"
+#include "range_proof_utils.hpp"
 #include "iostream"
 
 int main() {
@@ -12,7 +13,9 @@ int main() {
     Server server(io, 9000, serverPriv);
     server.registerClient("CLIENT-001", clientPub);
     server.run();
+    server.rangeProofClient();
 
-    std::cout << "Received: " << server.receiveSecure() << "\n";
-    server.sendSecure("Hello from server!");
+    SecureData data = server.receiveSecure();
+    std::cout << data.sender << ": " << data.payload << std::endl;
+    server.sendSecure("Server","Hello!");
 }
